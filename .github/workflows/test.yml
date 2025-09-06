@@ -1,0 +1,25 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+      - name: Install Macaulay2
+        run: |
+          sudo apt-get -y update
+          sudo apt-get install macaulay2
+      - name: Install kernel
+        run: |
+          pip install .
+          python3 -m m2_kernel.install
+      - name: Install test dependencies
+        run: pip install .[test]
+      - name: Run tests
+        run: python3 -m unittest tests/test_kernel.py
